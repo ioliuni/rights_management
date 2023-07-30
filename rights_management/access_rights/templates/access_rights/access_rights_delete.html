@@ -1,0 +1,21 @@
+{%  extends 'base.html' %}
+{% block content %}
+<!--Edit Page-->
+<section class="editPage">
+    <form method="post">
+        <fieldset>
+            <legend>Delete Access rights</legend>
+            {% if app %}
+                <h4>{{  app }}</h4>>
+            {% else %}
+            <div class="container">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button class="delete-album" type="submit">Delete Application access rights</button>
+            </div>
+         {% endif %}
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+
+
+    <div class="container p-5 my-5 bg-dark text-white">
+        <h1 class="text-center"> All {{ app }}</h1>
+        <form action="?page={{ page_obj.number }}">
+            <p><label for="search">Search:</label>
+            <input class="form-control" placeholder="Enter {{ app }}" name="search">
+                <button class="btn btn-success">Search {{ app }}</button></p>
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ app }} Name</th>
+                    <th>Description</th>
+                     {% if app == 'Job Profile' %}
+                            <th>{{ 'Job access'  }}</th>
+                        {% endif %}
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for ar in object_list %}
+                     <tr>
+                        {% if app == 'Department' %}
+                        <td><a href="{% url 'department_details' ar.pk %}">{{ ar.name }}</a> </td>
+                        {% else %}
+                        <td><a href="{% url 'job_profile_details' ar.pk %}">{{ ar.name }}</a> </td>
+                        {% endif %}
+                        <td>{{ar.description }}</td>
+                        {% if app == 'Job Profile' %}
+                            <td>{{ar.job_access_all }}</td>
+                        {% endif %}
+
+                     </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}">Previous</a>
+        {% endif %}
+        Page {{page_obj.number }} of {{ paginator.num_pages}}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number}}&search={{ search }}">Next</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

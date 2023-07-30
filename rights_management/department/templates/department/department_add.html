@@ -1,0 +1,17 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+
+    <form method="post">
+        <fieldset>
+            <legend>Add {{ app }} </legend>
+            <div class="container">
+                {% csrf_token %}
+                 {{ form.as_p}}
+                <button class="add-album" type="submit">Add New {{ app }}</button>
+            </div>
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

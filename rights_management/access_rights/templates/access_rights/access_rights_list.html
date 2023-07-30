@@ -1,0 +1,52 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+
+
+    <div class="container p-5 my-5 bg-dark text-white">
+        <h1 class="text-center"> All Access rights</h1>
+        <form action="?page={{ page_obj.number }}">
+            <p><label for="search">Search:</label>
+            <input class="form-control" placeholder="Enter Software" name="search">
+                <button class="btn btn-success">Search Software</button></p>
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Right name</th>
+                    <th>Description</th>
+                    <th>Software</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% if app %}
+                <tr>
+                    <td>{{  app }} </td>
+                </tr>
+                {% endif %}
+            </tbody>
+
+            <tbody>
+                {% for ar in object_list %}
+                     <tr>
+                        <td><a href="{% url 'access_rights_details' ar.pk %}">{{ ar.right_name }}</a> </td>
+                        <td>{{ar.description }}</td>
+                        <td>{{ ar.software }}</td>
+                     </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}">Previous</a>
+        {% endif %}
+        Page {{page_obj.number }} of {{ paginator.num_pages}}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number}}&search={{ search }}">Next</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+
+    <form method="post">
+        <fieldset>
+            <legend>Edit Department </legend>
+            <div class="container">
+                {% csrf_token %}
+                 {{ form.as_p}}
+                <button class="add-album" type="submit">Edit Department</button>
+            </div>
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

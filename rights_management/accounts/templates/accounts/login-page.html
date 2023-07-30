@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Start Login Section-->
+  <section class="createPage">
+            <!-- Start Login Form-->
+            <form method="POST">
+                <fieldset>
+                 <legend> Login </legend>
+                 <div class="container">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <!-- Login Button-->
+                <button class="add-album" type="submit">Log in</button>
+                      <p>Don't have account? <a href="{% url 'register' %}">Register</a></p>
+                 </div>
+                    </fieldset>
+            </form>
+            <!-- End Login Form -->
+
+
+        <div class="second-option">
+
+            <!-- Link to Register Page-->
+
+        </div>
+
+    <!-- End Login Section-->
+  </section>
+{% endblock %}

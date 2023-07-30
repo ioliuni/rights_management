@@ -1,0 +1,23 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+    <div class="container p-5 my-5 bg-dark text-white">
+
+
+        <h1 class="text-center"> Details Access rights </h1>
+            <div class="container">
+                 {% if app %}
+                  <h4>{{  app }}</h4>>
+                {% endif %}
+                <h4>Right name:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.right_name }}</h4>
+                <h4>Description:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.description }}</h4>
+                <h4>Software:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.software }}</h4>
+                <h4>
+                    <a href="{% url 'access_rights_edit' object.pk %}" class="edit">Edit</a>
+                    <a href="{% url 'access_rights_delete' object.pk %}" class="edit">Delete</a>
+                </h4>
+            </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+legend{
+  font-weight: 700;
+  font-size: 2em;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.5em;
+  color: white;
+  background: #171a1e;
+  -o-border-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 50%, #2d333b 50%) 1 round;
+  border-width: 1px;
+  border-style: solid;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+}
+
+li {
+  border-radius: 3px;
+  box-shadow: none;
+  border: 1px solid #384049;
+  background: #15171b;
+  display: block;
+  width: 100%;
+  color: white;
+  transition: all 0.3s ease;
+}
