@@ -17,7 +17,11 @@
                 <tr>
                     <th>Right name</th>
                     <th>Description</th>
-                    <th>Software</th>
+                    <th>Software  </th>
+                    {%  if app_current == "Access rights in profile"  %}
+                    <th>In Job profile</th>
+                    <th>Work people with Access rights</th>
+                    {% endif %}
                 </tr>
             </thead>
 
@@ -34,7 +38,11 @@
                      <tr>
                         <td><a href="{% url 'access_rights_details' ar.pk %}">{{ ar.right_name }}</a> </td>
                         <td>{{ar.description }}</td>
-                        <td>{{ ar.software }}</td>
+                        <td>{{ar.software}}</td>
+                         {% if ar.profile_all %}
+                        <td>{{ar.profile_all}}</td>
+                        <td>{{ar.work_people_all}}</td>
+                         {%  endif %}
                      </tr>
                 {% endfor %}
             </tbody>

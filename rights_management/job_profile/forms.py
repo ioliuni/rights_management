@@ -7,7 +7,7 @@ class Job_profileForm(forms.ModelForm):
     class Meta:
         model=Job_profile
         #fields = '__all__'
-        fields = [ 'name', 'description', 'job_access']
+        fields = [ 'name', 'description', 'job_access', 'in_department']
         # widgets = {
         #     "description": forms.Textarea(),
         #     #"job_access": forms.SelectMultiple()

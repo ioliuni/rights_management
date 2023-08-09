@@ -5,14 +5,27 @@
     <div class="container p-5 my-5 bg-dark text-white">
 
 
-        <h1 class="text-center"> Details Job Profile </h1>
+        <h1 class="text-center"> Details {{ app }} </h1>
             <div class="container">
-                <h4>Right name:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.name }}</h4>
+                {% if app == 'Job Profile' %}
+                <h4>Job profile name:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.name }}</h4>
                 <h4>Description:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.description }}</h4>
-                <h4>Job Access:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.job_access }}</h4>
+                <h4>Job Access:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.job_access_all }}</h4>
+                {% else %}
+                <h4>First name:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.first_name }}</h4>
+                <h4>Last name:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.last_name }}</h4>
+                <h4>Email:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.email }}</h4>
+                <h4>Job Profile:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.with_job_profile_all }}</h4>
+                {% endif %}
+                <h4>In Department:&nbsp;&nbsp;&nbsp;&nbsp; {{ object.in_department }}</h4>
                 <h4>
-                    <a href="{% url 'department_edit' object.pk %}" class="edit">Edit</a>
-                    <a href="{% url 'department_delete' object.pk %}" class="edit">Delete</a>
+                    {% if app == 'Job Profile' %}
+                    <a href="{% url 'job_profile_edit' object.pk %}" class="edit">Edit</a>
+                    <a href="{% url 'job_profile_delete' object.pk %}" class="edit">Delete</a>
+                    {% else %}
+                    <a href="{% url 'work_people_edit' object.pk %}" class="edit">Edit</a>
+                    <a href="{% url 'work_people_delete' object.pk %}" class="edit">Delete</a>
+                    {% endif %}
                 </h4>
             </div>
     </div>

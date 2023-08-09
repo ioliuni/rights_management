@@ -1,0 +1,62 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="createPage">
+
+
+    <div class="container p-5 my-5 bg-dark text-white">
+        <h1 class="text-center"> All {{ app }}</h1>
+        <form action="?page={{ page_obj.number }}">
+            <p><label for="search">Search:</label>
+            <input class="form-control" placeholder="Enter {{ app }}" name="search">
+                <button class="btn btn-success">Search {{ app }}</button></p>
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Job Profile</th>
+                    {% if app == "Work people in Department"%}
+
+                    <th>Access rights</th>
+                    {% endif %}
+                    <th>In Department</th>
+                </tr>
+            </thead>
+         <tbody>
+            {% if app_no_access %}
+                <tr>
+                    <td>{{  app_no_access }} </td>
+                </tr>
+            {% endif %}
+         </tbody>
+            <tbody>
+                {% for ar in object_list %}
+                     <tr>
+
+                        <td><a href="{% url 'work_people_details' ar.pk %}">{{ ar.first_name }}</a> </td>
+                        <td>{{ar.last_name }}</td>
+                        <td>{{ar.email }}</td>
+                        <td>{{ar.with_job_profile_all }}</td>
+                         {% if ar.job_access_all %}
+                              <td>{{ar.job_access_all }}</td>
+                         {% endif %}
+                        <td>{{ar.in_department }}</td>
+                     </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}">Previous</a>
+        {% endif %}
+        Page {{page_obj.number }} of {{ paginator.num_pages}}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number}}&search={{ search }}">Next</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

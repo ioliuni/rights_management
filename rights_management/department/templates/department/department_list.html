@@ -18,11 +18,19 @@
                     <th>{{ app }} Name</th>
                     <th>Description</th>
                      {% if app == 'Job Profile' %}
-                            <th>{{ 'Job access'  }}</th>
+                            <th>Job access</th>
+                            <th>In Department</th>
                         {% endif %}
 
                 </tr>
             </thead>
+         <tbody>
+            {% if app_no_access %}
+                <tr>
+                    <td>{{  app_no_access }} </td>
+                </tr>
+                {% endif %}
+            </tbody>
             <tbody>
                 {% for ar in object_list %}
                      <tr>
@@ -34,6 +42,7 @@
                         <td>{{ar.description }}</td>
                         {% if app == 'Job Profile' %}
                             <td>{{ar.job_access_all }}</td>
+                            <td>{{ar.in_department }}</td>
                         {% endif %}
 
                      </tr>

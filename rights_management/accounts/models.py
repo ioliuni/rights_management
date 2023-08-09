@@ -8,7 +8,7 @@ from rights_management.department.models import Department
 
 def only_lettars(value):
     if not value.isalpha():
-        raise forms.ValidationError("Полето трябва да съдържа само букви.")
+        raise forms.ValidationError("Name should contain only letters!")
 
 def get_depar():
     return Department.objects.get(id=1).id
@@ -16,7 +16,7 @@ class RightsUser(AbstractUser):
     email=models.EmailField(unique=True)
     first_name=models.CharField(max_length=30, validators=(validators.MinLengthValidator(2),only_lettars))
     last_name=models.CharField(max_length=30, validators=(validators.MinLengthValidator(2),only_lettars))
-    department=models.ForeignKey(Department,on_delete=models.DO_NOTHING, default=get_depar, null=True, blank=True)
+    #department=models.ForeignKey(Department,on_delete=models.DO_NOTHING, default=get_depar, null=True, blank=True)
 
     def get_user_name(self):
         if self.first_name and self.last_name:

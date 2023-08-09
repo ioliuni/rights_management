@@ -1,0 +1,30 @@
+{%  extends 'base.html' %}
+{% block content %}
+<!--Edit Page-->
+<section class="editPage">
+
+    <form method="post">
+        <fieldset>
+            <legend>Delete {{ app_current }}</legend>
+            <div class="container">
+                {% csrf_token %}
+                {% if app_current == 'Job Profile' %}
+                <h4>Job profile name:&nbsp;&nbsp;&nbsp;&nbsp; {{name }}</h4>
+                <h4>Description:&nbsp;&nbsp;&nbsp;&nbsp; {{ description }}</h4>
+                <h4>Job Access:&nbsp;&nbsp;&nbsp;&nbsp; {{ job_access_all }}</h4>
+                {% else %}
+                <h4>First name:&nbsp;&nbsp;&nbsp;&nbsp; {{ first_name }}</h4>
+                <h4>Last name:&nbsp;&nbsp;&nbsp;&nbsp; {{ last_name }}</h4>
+                <h4>Email:&nbsp;&nbsp;&nbsp;&nbsp; {{ email }}</h4>
+                <h4>Job Profile:&nbsp;&nbsp;&nbsp;&nbsp; {{ with_job_profile_all }}</h4>
+                {% endif %}
+                <h4>In Department:&nbsp;&nbsp;&nbsp;&nbsp; {{ in_department }}</h4>
+
+                <button class="delete-album" type="submit">Delete {{ app_current }}</button>
+            </div>
+            
+        </fieldset>
+    </form>
+
+</section>
+{% endblock %}

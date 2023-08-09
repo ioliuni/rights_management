@@ -90,7 +90,7 @@ class access_rights_edit(LoginRequiredMixin, generic.UpdateView):
         # for i in access_rights.user.all():
         #     print(i.id)
         #print(access_rights.user.all())
-        if  self.request.user not in access_rights.user.all():
+        if  self.request.user not in access_rights.user.all() and not self.request.user.is_superuser:
             app = 'User no can edit this Access_rights'
             context = {'app': app}
             return context
@@ -100,7 +100,7 @@ class access_rights_edit(LoginRequiredMixin, generic.UpdateView):
         #print(contex['object'].__dict__)
 
         return contex
-
+@login_required
 def access_rights_delete(request,pk):
     if not request.user.has_perm('access_rights.delete_access_rights'):
         app = 'No can delete Access_rights'
@@ -108,7 +108,7 @@ def access_rights_delete(request,pk):
         return render(request, template_name='access_rights/no_can_add.html', context=context)
     access_rights = Access_rights.objects.get(pk=pk)
     access_rights_user = access_rights.user.all()
-    if request.user not in access_rights_user:
+    if request.user not in access_rights_user and not request.user.is_superuser:
         # print(request.user.id)
         # for i in access_rights_user:
         #     print(i.id)
