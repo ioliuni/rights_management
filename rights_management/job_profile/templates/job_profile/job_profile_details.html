@@ -24,6 +24,7 @@
                     <a href="{% url 'job_profile_delete' object.pk %}" class="edit">Delete</a>
                     {% else %}
                     <a href="{% url 'work_people_edit' object.pk %}" class="edit">Edit</a>
+                    <a href="{% url 'work_people_edit_profile' object.pk %}" class="edit">Edit Job profile</a>
                     <a href="{% url 'work_people_delete' object.pk %}" class="edit">Delete</a>
                     {% endif %}
                 </h4>

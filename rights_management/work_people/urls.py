@@ -7,5 +7,6 @@ urlpatterns=[
     path('list/', views.work_people_list.as_view(), name='work_people_list'),
     path('detail/<int:pk>/', views.work_people_details.as_view(), name='work_people_details'),
     path('edit/<int:pk>/', views.work_people_edit.as_view(), name='work_people_edit'),
+    path('edit_profile/<int:pk>/', views.work_people_edit_profile.as_view(), name='work_people_edit_profile'),
     path('delete/<int:pk>/', views.work_people_delete, name='work_people_delete'),
 ]

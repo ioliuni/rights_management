@@ -26,5 +26,6 @@ urlpatterns = (
     path('job_profile/', include('rights_management.job_profile.urls')),
     path('accounts/', include('rights_management.accounts.urls')),
     path('work_people/', include('rights_management.work_people.urls')),
-    path("", views.index, name='index')
+    path("", views.index, name='index'),
+    path("about/", views.about, name='about')
 )

@@ -12,6 +12,9 @@
             <div class="container">
                 {% csrf_token %}
                  {{ form.as_p}}
+                {% if  app_current == "Profile's Work people"%}
+                <p>In Department: {{ in_department }}</p>
+                {% endif %}
                 <button class="add-album" type="submit">Edit {{ app_current }}</button>
             </div>
             {% endif %}

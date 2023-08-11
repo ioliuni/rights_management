@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
@@ -82,7 +83,7 @@ class work_people_details(LoginRequiredMixin, generic.DetailView):
 class work_people_edit(LoginRequiredMixin,generic.UpdateView):
     model = Work_people
     template_name = 'job_profile/job_profile_edit.html'
-    fields = [ 'first_name', 'last_name', 'email', 'in_department', 'with_job_profile']
+    fields = [ 'first_name', 'last_name', 'email', 'in_department']
     success_url = reverse_lazy('work_people_list')
 
     def get_context_data(self, *args, **kwargs):
@@ -91,7 +92,7 @@ class work_people_edit(LoginRequiredMixin,generic.UpdateView):
             app = 'No can list, edit, delete Work people'
             context = {'app': app}
             return context
-        job_profile = self.get_object()
+        work_people = self.get_object()
         if  self.request.user.id != contex['object'].owner and not self.request.user.is_superuser:
             app = 'User no can edit this Work people'
             context = {'app': app}
@@ -99,6 +100,50 @@ class work_people_edit(LoginRequiredMixin,generic.UpdateView):
         app_current = 'Work people'
         contex['app_current'] = app_current
         return contex
+
+    def form_valid(self, form):
+        # Изчистваме with_job_profile при промяна на in_department
+        if 'in_department' in form.changed_data:
+            form.instance.with_job_profile.clear()
+        return super().form_valid(form)
+
+
+class work_people_edit_profile(LoginRequiredMixin,generic.UpdateView):
+    model = Work_people
+    template_name = 'job_profile/job_profile_edit.html'
+    fields = [ 'first_name', 'last_name', 'email', 'in_department', 'with_job_profile']
+    #fields = [ 'first_name', 'last_name', 'email', 'in_department']
+    success_url = reverse_lazy('work_people_list')
+
+    def get_context_data(self, *args, **kwargs):
+        contex = super().get_context_data(*args, **kwargs)
+        if not self.request.user.has_perm('work_people.change_work_people'):
+            app = 'No can list, edit, delete Work people'
+            context = {'app': app}
+            return context
+        work_people = self.get_object()
+        if  self.request.user.id != contex['object'].owner and not self.request.user.is_superuser:
+            app = 'User no can edit this Work people'
+            context = {'app': app}
+            return context
+        app_current = "Profile's Work people"
+        contex['app_current'] = app_current
+        contex['in_department']=work_people.in_department
+        #contex['form'].fields['in_department'].widget.attrs['readonly'] = True
+        #print(contex['in_department'])
+        return contex
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        # Филтрирайте избора на Job_profile според Department на Work_people
+        department = self.object.in_department
+        if department:
+            form.fields['with_job_profile'].queryset = Job_profile.objects.filter(in_department=department)
+        #form.fields['in_department'].widget.attrs['readonly'] = True
+        form.fields['in_department'].widget = forms.HiddenInput()
+
+        return form
 @login_required
 def work_people_delete(request,pk):
     if not request.user.has_perm('work_people.delete_work_people'):

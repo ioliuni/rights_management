@@ -13,6 +13,9 @@ from rights_management.access_rights.models import Access_rights
 def index(request):
     return render(request, template_name='access_rights/index.html')
 
+def about(request):
+    return render(request, template_name='access_rights/about.html')
+
 @login_required
 def access_rights_add(request):
     if not request.user.has_perm('access_rights.add_access_rights'):
