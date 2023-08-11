@@ -8,5 +8,6 @@ urlpatterns=[
     path('detail/<int:pk>/', views.access_rights_details.as_view(), name='access_rights_details'),
     path('edit/<int:pk>/', views.access_rights_edit.as_view(), name='access_rights_edit'),
     path('delete/<int:pk>/', views.access_rights_delete, name='access_rights_delete'),
+    #path('nav_permission/', views.nav_permission, name='nav_permission'),
 ]
 

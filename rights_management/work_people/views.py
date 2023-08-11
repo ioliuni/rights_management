@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
+from rights_management.access_rights.views import nav_bar_list
 from rights_management.department.models import Department
 from rights_management.job_profile.models import Job_profile
 from rights_management.work_people.forms import Work_peopleForm
@@ -19,6 +20,7 @@ def work_people_add(request):
     if not request.user.has_perm('work_people.add_work_people'):
         app='No can add Work_people'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request,template_name='access_rights/no_can_add.html',context=context)
     form = Work_peopleForm(request.POST or None)
     if form.is_valid():
@@ -28,6 +30,7 @@ def work_people_add(request):
         return redirect('work_people_list')
     app='Work_people'
     context = {'form': form, "app": app}
+    context['view_all'] = nav_bar_list(request.user)['view_all']
     return render(request, template_name='department/department_add.html', context=context)
 
 class work_people_list(LoginRequiredMixin, generic.ListView):
@@ -52,12 +55,14 @@ class work_people_list(LoginRequiredMixin, generic.ListView):
             app_no_access = 'No can list, edit, delete Work people'
             app = 'Work people'
             context = {'app': app, 'app_no_access': app_no_access}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         contex['search'] = self.request.GET.get('search', '')
         app = 'Work people'
         contex['app']=app
         for i in contex['object_list']:
             i.with_job_profile_all=", ".join(([j.name for j in i.with_job_profile.all()]))
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 class work_people_details(LoginRequiredMixin, generic.DetailView):
@@ -71,11 +76,13 @@ class work_people_details(LoginRequiredMixin, generic.DetailView):
                 self.request.user.has_perm('work_people.delete_work_people')):
             app = 'No can list, edit, delete Work people'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
 
         contex['object'].with_job_profile_all = ", ".join(([j.name for j in contex['object'].with_job_profile.all()]))
         app = 'Work people'
         contex['app'] = app
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         #print(contex['object'].job_access_all)
         return contex
 
@@ -91,14 +98,17 @@ class work_people_edit(LoginRequiredMixin,generic.UpdateView):
         if not self.request.user.has_perm('work_people.change_work_people'):
             app = 'No can list, edit, delete Work people'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         work_people = self.get_object()
         if  self.request.user.id != contex['object'].owner and not self.request.user.is_superuser:
             app = 'User no can edit this Work people'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         app_current = 'Work people'
         contex['app_current'] = app_current
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
     def form_valid(self, form):
@@ -120,23 +130,25 @@ class work_people_edit_profile(LoginRequiredMixin,generic.UpdateView):
         if not self.request.user.has_perm('work_people.change_work_people'):
             app = 'No can list, edit, delete Work people'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         work_people = self.get_object()
         if  self.request.user.id != contex['object'].owner and not self.request.user.is_superuser:
             app = 'User no can edit this Work people'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         app_current = "Profile's Work people"
         contex['app_current'] = app_current
         contex['in_department']=work_people.in_department
         #contex['form'].fields['in_department'].widget.attrs['readonly'] = True
         #print(contex['in_department'])
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
 
-        # Филтрирайте избора на Job_profile според Department на Work_people
         department = self.object.in_department
         if department:
             form.fields['with_job_profile'].queryset = Job_profile.objects.filter(in_department=department)
@@ -149,18 +161,35 @@ def work_people_delete(request,pk):
     if not request.user.has_perm('work_people.delete_work_people'):
         app='No can delete Work people'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request,template_name='access_rights/no_can_add.html',context=context)
-    work_people = Work_people.objects.get(pk=pk)
+    try:
+        work_people = Work_people.objects.get(pk=pk)
+    except Exception:
+        app = 'No can delete this Work people.'
+        context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
+        return render(request, template_name='access_rights/no_can_add.html', context=context)
+
     work_people.with_job_profile_all = ", ".join(([j.name for j in work_people.with_job_profile.all()]))
     if  request.user.id != work_people.owner and not request.user.is_superuser:
-        app = 'User no can delete this Work people'
+        app = 'User no can delete this Work people.'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request, template_name='access_rights/no_can_add.html', context=context)
     if request.method == 'POST':
-        work_people.delete()
+        try:
+            work_people.delete()
+        except Exception:
+            app = 'No can delete this Work people.'
+            context = {'app': app}
+            context['view_all'] = nav_bar_list(request.user)['view_all']
+            return render(request, template_name='access_rights/no_can_add.html', context=context)
+
         return redirect('work_people_list')
     #form = Job_profileDeleteForm(initial=job_profile.__dict__)
     app_current = 'Work people'
     context = {'first_name':work_people.first_name, 'last_name':work_people.last_name, 'email': work_people.email,'with_job_profile_all': work_people.with_job_profile_all,'in_department': work_people.in_department,'app_current': app_current }
+    context['view_all'] = nav_bar_list(request.user)['view_all']
     return render(request, template_name='job_profile/job_profile_delete.html', context=context)
 

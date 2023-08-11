@@ -21,6 +21,9 @@
                     {%  if app_current == "Access rights in profile"  %}
                     <th>In Job profile</th>
                     <th>Work people with Access rights</th>
+                    {% else %}
+                    <th>      </th>
+                    <th>      </th>
                     {% endif %}
                 </tr>
             </thead>
@@ -42,6 +45,9 @@
                          {% if ar.profile_all %}
                         <td>{{ar.profile_all}}</td>
                         <td>{{ar.work_people_all}}</td>
+                             {% else %}
+                        <td>      </td>
+                        <td>      </td>
                          {%  endif %}
                      </tr>
                 {% endfor %}

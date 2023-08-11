@@ -7,6 +7,7 @@ from django.views import generic
 
 from rights_management import access_rights
 from rights_management.access_rights.models import Access_rights
+from rights_management.access_rights.views import nav_bar_list
 from rights_management.department.forms import DepartmentForm, DepartmentDeleteForm
 from rights_management.department.models import Department
 from rights_management.job_profile.models import Job_profile
@@ -19,6 +20,7 @@ def department_add(request):
     if not request.user.has_perm('department.add_department'):
         app='No can add Department'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request,template_name='access_rights/no_can_add.html',context=context)
     form = DepartmentForm(request.POST or None)
     if form.is_valid():
@@ -28,6 +30,7 @@ def department_add(request):
         return redirect('department_list')
     app="Department"
     context = {'form': form, 'app':app}
+    context['view_all'] = nav_bar_list(request.user)['view_all']
     return render(request, template_name='department/department_add.html', context=context)
 
 class department_list(generic.ListView):
@@ -47,12 +50,17 @@ class department_list(generic.ListView):
         contex['search'] = self.request.GET.get('search', '')
         app = "Department"
         contex['app'] = app
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 class department_details(generic.DetailView):
     model = Department
     template_name = 'department/department_details.html'
 
+    def get_context_data(self, *args, **kwargs):
+        contex = super().get_context_data(*args, **kwargs)
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
+        return contex
 
 class department_edit(LoginRequiredMixin, generic.UpdateView):
     model = Department
@@ -65,6 +73,7 @@ class department_edit(LoginRequiredMixin, generic.UpdateView):
         if not self.request.user.has_perm('department.change_department'):
             app = 'No can edit Department'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         access_rights = self.get_object()
         # for i in access_rights.user.all():
@@ -74,7 +83,9 @@ class department_edit(LoginRequiredMixin, generic.UpdateView):
         if  self.request.user.id != contex['object'].owner and not self.request.user.is_superuser:
             app = 'User no can edit this Department'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 @login_required
@@ -82,11 +93,19 @@ def department_delete(request,pk):
     if not request.user.has_perm('department.delete_department'):
         app = 'No can delete Department'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request, template_name='access_rights/no_can_add.html', context=context)
-    department = Department.objects.get(pk=pk)
+    try:
+        department = Department.objects.get(pk=pk)
+    except Exception:
+        app = 'No can delete this Department.'
+        context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
+        return render(request, template_name='access_rights/no_can_add.html', context=context)
     if  request.user.id != department.owner and not request.user.is_superuser:
         app = 'User no can delete this Department'
         context = {'app': app}
+        context['view_all'] = nav_bar_list(request.user)['view_all']
         return render(request, template_name='access_rights/no_can_add.html', context=context)
     if request.method == 'POST':
         try:
@@ -94,11 +113,13 @@ def department_delete(request,pk):
         except Exception:
             app = 'No can delete this Department. The Department is used.'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(request.user)['view_all']
             return render(request, template_name='access_rights/no_can_add.html', context=context)
     
         return redirect('department_list')
     form = DepartmentDeleteForm(initial=department.__dict__)
     context = {'form': form}
+    context['view_all'] = nav_bar_list(request.user)['view_all']
     return render(request, template_name='department/department_delete.html', context=context)
 
 class report(LoginRequiredMixin,generic.ListView):
@@ -118,6 +139,7 @@ class report(LoginRequiredMixin,generic.ListView):
         contex['search'] = self.request.GET.get('search', '')
         app = "Department"
         contex['app'] = app
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 class people_in_department(LoginRequiredMixin, generic.ListView):
@@ -144,6 +166,7 @@ class people_in_department(LoginRequiredMixin, generic.ListView):
             app_no_access = 'No can list, edit, delete Work people'
             app = 'Work people'
             context = {'app': app, 'app_no_access': app_no_access}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         contex['search'] = self.request.GET.get('search', '')
         app = 'Work people in Department'
@@ -160,6 +183,7 @@ class people_in_department(LoginRequiredMixin, generic.ListView):
                 i.job_access_all+=" "
 
             #i.job_access_all = ", ".join(([j.right_name for j in i.with_job_profile.job_profile_set.all()]))
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 class profile_in_department(LoginRequiredMixin, generic.ListView):
@@ -186,12 +210,14 @@ class profile_in_department(LoginRequiredMixin, generic.ListView):
             app_no_access = 'No can list, edit, delete Job Profile'
             app = 'Job Profile'
             context = {'app': app, 'app_no_access': app_no_access}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         contex['search'] = self.request.GET.get('search', '')
         app = 'Job Profile'
         contex['app']=app
         for i in contex['object_list']:
             i.job_access_all=", ".join(([j.right_name for j in i.job_access.all()]))
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex
 
 class access_rights_in_profile (LoginRequiredMixin, generic.ListView):
@@ -216,6 +242,7 @@ class access_rights_in_profile (LoginRequiredMixin, generic.ListView):
                 self.request.user.has_perm('access_rights.delete_access_rights')):
             app = 'No can list, edit, delete Access_rights'
             context = {'app': app}
+            context['view_all'] = nav_bar_list(self.request.user)['view_all']
             return context
         contex['search'] = self.request.GET.get('search', '')
         contex[ 'app_current']="Access rights in profile"
@@ -231,4 +258,5 @@ class access_rights_in_profile (LoginRequiredMixin, generic.ListView):
                 i.work_people_all += ", ".join(([l.first_name+ " "+l.last_name for l in k.work_people_set.all()]))
                 i.work_people_all+=" "
                 #print(i.work_people_all)
+        contex['view_all'] = nav_bar_list(self.request.user)['view_all']
         return contex

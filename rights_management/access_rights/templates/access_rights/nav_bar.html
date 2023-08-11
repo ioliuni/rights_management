@@ -1,0 +1,6 @@
+{% load static %}
+
+  {% for ar in view_all %}
+     <li><a href="{% url ar %}">{{ ar | title}}</a> </li>
+  {% endfor %}
+

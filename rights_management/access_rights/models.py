@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -22,3 +23,6 @@ class Access_rights(models.Model):
     def __str__(self):
         return self.right_name
 
+class View_permission(models.Model):
+    view_name=models.CharField(max_length=30, unique=True)
+    with_permission=models.OneToOneField(Permission, on_delete=models.DO_NOTHING)
