@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.models import Permission, Group, AnonymousUser
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -14,6 +14,11 @@ from rights_management.access_rights.models import Access_rights, View_permissio
 #
 #     return user.groups.filter(name='Can add access rights').exists()
 def nav_bar_list(user):
+    #print("?",user.username, "?")
+    if user.username=="":
+        view_all_sort=[]
+        context_nav = {'view_all': view_all_sort}
+        return context_nav
     view_all = set()
     for x in Permission.objects.filter(user=user):
         for y in View_permission.objects.all():
