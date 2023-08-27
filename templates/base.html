@@ -21,23 +21,23 @@
 
             <img src="/static/images/images.jpg" alt="key">
 
-            <a href="#">Home</a><ul></ul>
+            <a href="{% url "index"%}">Начало</a><ul></ul>
 
             <ul>
                 <!--Only for user with created profile-->
 
                 <li>{{ request.user }}</li>
                  {% if not request.user.is_authenticated %}
-                <li><a href="{% url 'department_list' %}">Department List</a></li>
-                <li><a href="{% url 'register' %}">Register user</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'department_list' %}">Организационна структура</a></li>
+                <li><a href="{% url 'register' %}">Регистрация на потребител</a></li>
+                <li><a href="{% url 'login' %}">Вход</a></li>
+                <li><a href="{% url 'about' %}">Относно</a></li>
                 {% else %}
 
                      {% include 'access_rights/nav_bar.html' %}
-                <li><a href="{% url 'report' %}">Report</a></li>
-                <li><a href="{% url 'access_rights_in_profile' %}">Report Access rights</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="{% url 'report' %}">Справка по организ.единици</a></li>
+                <li><a href="{% url 'access_rights_in_profile' %}">Справка по права за достъп</a></li>
+                <li><a href="{% url 'logout' %}">Изход</a></li>
                 {% endif %}
             </ul>
 
@@ -54,7 +54,7 @@
     <!-- Footer -->
     <footer>
         <div>
-            Rights management
+            Управление на достъпа
         </div>
     </footer>
     <!-- End Footer -->

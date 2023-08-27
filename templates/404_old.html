@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <style>
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <section class="editPage">
+        <fieldset style="width:100%;">
+            <div>
+                <img src="/static/images/Capture.PNG" alt="404 not found gif" style="width:100%;">
+            </div>
+            <legend style="width:100%; margin-left: auto;  margin-right: auto;">
+                Грешка 404
+                <h3>Страницата не е намерена!</h3>
+                <a href="{% url 'index' %}">Начало</a>
+            </legend>
+        </fieldset>
+    </section>
+
+{% endblock %}
